@@ -1,4 +1,5 @@
-package com.example.modernjava;
+package com.example.modernjava.part1;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;

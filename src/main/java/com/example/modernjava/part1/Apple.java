@@ -1,4 +1,4 @@
-package com.example.modernjava;
+package com.example.modernjava.part1;
 
 public class Apple {
     private Integer weight;
