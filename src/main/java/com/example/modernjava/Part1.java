@@ -2,10 +2,13 @@ package com.example.modernjava;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class Chapter2 {
+import static java.util.Comparator.comparing;
+
+public class Part1 {
 
     public static void main(String[] args) {
 
@@ -30,6 +33,32 @@ public class Chapter2 {
 
         // lambda
         List<Integer> oddNumbers = filter(Arrays.asList(1, 2, 3, 4, 5), i -> i % 2 == 1);
+
+
+
+        // comparator impl class
+        inventory.sort(new AppleComparator());
+
+        // comparator anonymous
+        inventory.sort(new Comparator<Apple>() {
+            @Override
+            public int compare(Apple o1, Apple o2) {
+                return o1.getWeight().compareTo(o2.getWeight());
+            }
+        });
+
+        // lambda
+        inventory.sort((a1, a2) -> a1.getWeight().compareTo(a2.getWeight()));
+
+        // utilize comparing
+        inventory.sort(comparing(Apple::getWeight));
+
+        // chaining comparators
+        inventory.sort(comparing(Apple::getWeight)
+                .reversed()
+                .thenComparing(Apple::getColor));
+
+
     }
 
     public static List<Apple> filterApplesByColor(List<Apple> inventory, Color color) {
