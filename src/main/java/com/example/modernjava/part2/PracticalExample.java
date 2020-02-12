@@ -4,10 +4,7 @@ package com.example.modernjava.part2;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.OptionalInt;
-import java.util.function.IntBinaryOperator;
-import java.util.function.IntConsumer;
 import java.util.stream.Collectors;
 
 public class PracticalExample {
@@ -85,7 +82,7 @@ public class PracticalExample {
         System.out.println("SOL5");
         boolean flag = transactions.stream()
                 .map(transaction -> transaction.getTrader().getCity())
-                .anyMatch(city -> "Milan".equals(city));
+                .anyMatch("Milan"::equals);
         System.out.println(flag);
         System.out.println();
     }
