@@ -1,8 +1,14 @@
 package com.example.modernjava.part2;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Part2 {
 
@@ -80,6 +86,19 @@ public class Part2 {
                 .distinct()
                 .peek(System.out::println)
                 .collect(Collectors.toList());
+
+        try(Stream<String> lines = Files.lines(Paths.get(ClassLoader.getSystemResource("data.txt").toURI()), Charset.defaultCharset())) {
+            long uniqueWords = lines.flatMap(line -> Arrays.stream(line.split(" ")))
+                    .distinct()
+                    .count();
+            System.out.println("Unique Words: " + uniqueWords);
+        } catch (IOException | URISyntaxException ex) {
+            ex.printStackTrace();
+        }
+
+        Stream.iterate(0, n -> n + 2)
+                .limit(10)
+                .forEach(System.out::println);
     }
 
 }
