@@ -1,5 +1,7 @@
 package com.example.modernjava.part2;
 
+import java.util.UUID;
+
 public class Transaction {
 
     private final Trader trader;
@@ -22,6 +24,10 @@ public class Transaction {
 
     public int getValue() {
         return value;
+    }
+
+    public String getReferenceCode() {
+        return UUID.randomUUID().toString();
     }
 
     @Override
