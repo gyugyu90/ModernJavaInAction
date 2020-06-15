@@ -1,4 +1,4 @@
-package com.example.modernjava.part3;
+package com.example.modernjava.part3.observer;
 
 public interface Subject {
     void registerObserver(Observer o);

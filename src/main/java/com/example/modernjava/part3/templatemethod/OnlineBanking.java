@@ -1,4 +1,4 @@
-package com.example.modernjava.part3;
+package com.example.modernjava.part3.templatemethod;
 
 public abstract class OnlineBanking {
     public void processCustomer(int id) {

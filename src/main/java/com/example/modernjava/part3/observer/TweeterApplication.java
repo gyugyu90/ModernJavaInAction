@@ -1,4 +1,4 @@
-package com.example.modernjava.part3;
+package com.example.modernjava.part3.observer;
 
 public class TweeterApplication {
     public static void main(String[] args) {

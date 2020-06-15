@@ -1,6 +1,10 @@
 package com.example.modernjava;
 
-import com.example.modernjava.part3.*;
+import com.example.modernjava.part3.strategy.IsAllLowerCase;
+import com.example.modernjava.part3.strategy.IsNumeric;
+import com.example.modernjava.part3.strategy.Validator;
+import com.example.modernjava.part3.templatemethod.Customer;
+import com.example.modernjava.part3.templatemethod.OnlineBankingLambda;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.*;
