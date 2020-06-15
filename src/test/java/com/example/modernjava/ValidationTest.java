@@ -1,8 +1,6 @@
 package com.example.modernjava;
 
-import com.example.modernjava.part3.IsAllLowerCase;
-import com.example.modernjava.part3.IsNumeric;
-import com.example.modernjava.part3.Validator;
+import com.example.modernjava.part3.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.*;
@@ -26,6 +24,12 @@ public class ValidationTest {
         Validator lowerCaseValidator2 = new Validator(s -> s.matches("[a-z]+"));
         boolean b4 = lowerCaseValidator2.validate("aaaa");
         assertTrue(b4);
+    }
 
+    @Test
+    public void testOnlineBanking() {
+        new OnlineBankingLambda().processCustomer(1337, (Customer c) -> {
+            System.out.println("Hello");
+        });
     }
 }
