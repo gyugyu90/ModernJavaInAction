@@ -10,6 +10,7 @@ import java.util.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import static com.example.modernjava.part3.dsl.MethodChainingOrderBuilder.forCustomer;
 import static java.util.stream.Collectors.groupingBy;
 
 
@@ -69,6 +70,17 @@ public class DSL {
 
         Collector<? super Car, ?, Map<String, Map<Color, List<Car>>>> carGroupingCollector = GroupingBuilder.groupOn(Car::getColor).after(Car::getBrand).get();
 
+
+        Order order = forCustomer("BigBank")
+                .buy(30)
+                .stock("IBM")
+                .on("NYSE")
+                .at(12.00)
+                .sell(0)
+                .stock("GOOGLE")
+                .on("NASDAQ")
+                .at(375.00)
+                .end();
 
 
 
