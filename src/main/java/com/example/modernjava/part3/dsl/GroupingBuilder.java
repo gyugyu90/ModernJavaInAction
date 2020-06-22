@@ -1,10 +1,9 @@
-package com.example.modernjava.part3;
+package com.example.modernjava.part3.dsl;
 
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
 

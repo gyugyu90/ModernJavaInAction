@@ -1,4 +1,4 @@
-package com.example.modernjava.part3;
+package com.example.modernjava.part3.dsl;
 
 import com.example.modernjava.part1.Color;
 
