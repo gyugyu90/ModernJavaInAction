@@ -11,6 +11,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import static com.example.modernjava.part3.dsl.MethodChainingOrderBuilder.forCustomer;
+import static com.example.modernjava.part3.dsl.NestedFunctionOrderBuilder.*;
 import static java.util.stream.Collectors.groupingBy;
 
 
@@ -82,7 +83,10 @@ public class DSL {
                 .at(375.00)
                 .end();
 
-
+        Order order1 = order("BigBand",
+                            buy(80, stock("IBM", on("NYSE")), at(125.00)),
+                            sell(0, stock("GOOGLE", on("NASDAQ")), at(375.00))
+                        );
 
     }
 
