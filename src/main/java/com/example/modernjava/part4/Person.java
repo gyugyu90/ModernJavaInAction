@@ -1,9 +1,15 @@
 package com.example.modernjava.part4;
 
-public class Person {
-    private Car car;
+import java.util.Optional;
 
-    public Car getCar() {
+public class Person {
+    private Optional<Car> car;
+    private int age;
+    public Optional<Car> getCar() {
         return car;
+    }
+
+    public int getAge() {
+        return age;
     }
 }
