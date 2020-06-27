@@ -1,5 +1,7 @@
 package com.example.modernjava.part3.dsl;
 
+import java.util.function.Consumer;
+
 public class TradeBuilder {
 
     private final MethodChainingOrderBuilder builder;
@@ -14,4 +16,6 @@ public class TradeBuilder {
     public StockBuilder stock(String symbol) {
         return new StockBuilder(builder, trade, symbol);
     }
+
+
 }
