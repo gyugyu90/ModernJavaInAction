@@ -1,18 +1,37 @@
 package com.example.modernjava.part5;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 public class Shop {
 
+    private String name;
+
+    public Shop(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     public static void main(String[] args) {
 
-        Shop shop = new Shop();
+//        ex1();
+        ex2();
+
+    }
+
+    private static void ex1() {
+        Shop shop = new Shop("Best Shop");
 
         long start = System.nanoTime();
         Future<Double> futurePrice = shop.getPriceAsync("my favorite product");
-        long invocationTime = ((System.nanoTime() - start) / 1_000_000);
+        long invocationTime = (System.nanoTime() - start) / 1_000_000;
         System.out.println("Invocation returned after " + invocationTime + " milliseconds");
 
         System.out.println("Do something else");
@@ -26,8 +45,20 @@ public class Shop {
 
         long retrievalTime = ((System.nanoTime() - start) / 1_000_000);
         System.out.println("Price returned after " + retrievalTime + " milliseconds");
+    }
 
+    private static void ex2() {
 
+        long start = System.nanoTime();
+        System.out.println(findPrices("myPhone27S"));
+        long invocationTime = (System.nanoTime() - start) / 1_000_000;
+        System.out.println("Done in " + invocationTime + "msecs");
+
+    }
+
+    public static List<String> findPrices(String product) {
+        List<Shop> shops = Arrays.asList(new Shop("BestPrice"), new Shop("LetsSaveBig"), new Shop("MyFavoriteShop"));
+        return shops.parallelStream().map(shop -> String.format("%s price is %.2f", shop.getName(), shop.getPrice(product))).collect(Collectors.toList());
     }
 
     public double getPrice(String product) {
@@ -35,16 +66,7 @@ public class Shop {
     }
 
     public Future<Double> getPriceAsync(String product) {
-        CompletableFuture<Double> futurePrice = new CompletableFuture<>();
-        new Thread(() -> {
-            try {
-                double price = calculatePrice(product);
-                futurePrice.complete(price);
-            } catch (Exception ex) {
-                futurePrice.completeExceptionally(ex);
-            }
-        }).start();
-        return futurePrice;
+        return CompletableFuture.supplyAsync(() -> calculatePrice(product));
     }
 
 
@@ -57,7 +79,6 @@ public class Shop {
     public static void delay() {
         try {
             Thread.sleep(1000L);
-            throw new IllegalArgumentException();
         } catch (InterruptedException ex) {
             throw new RuntimeException(ex);
         }
