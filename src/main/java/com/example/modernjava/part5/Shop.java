@@ -5,21 +5,13 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Shop {
 
     private String name;
 
     private static List<Shop> shops = Arrays.asList(new Shop("BestPrice"), new Shop("LetsSaveBig"), new Shop("MyFavoriteShop"), new Shop("ButItAll"), new Shop("ShopEasy"));
-
-//    private final Executor executor = Executors.newFixedThreadPool(Math.min(shops.size(), 100), new ThreadFactory() {
-//        @Override
-//        public Thread newThread(Runnable r) {
-//            Thread t = new Thread(r);
-//            t.setDaemon(true);
-//            return t;
-//        }
-//    });
 
     public Shop(String name) {
         this.name = name;
@@ -33,8 +25,10 @@ public class Shop {
 
 //        ex1();
 //        ex2();
-        ex3();
+//        ex3();
+        ex4();
     }
+
 
     private static void ex1() {
         Shop shop = new Shop("Best Shop");
@@ -68,12 +62,24 @@ public class Shop {
 
     private static void ex3() {
         long start = System.nanoTime();
-        System.out.println(findPrices2("myPhone27S"));
+        System.out.println(findPrices3("myPhone27S"));
         long invocationTime = (System.nanoTime() - start) / 1_000_000;
         System.out.println("Done in " + invocationTime + "msecs");
     }
 
-    public static List<String> findPrices(String product) {
+    private static void ex4() {
+        long start = System.nanoTime();
+
+        CompletableFuture[] futures = findPricesStream("myPhone275")
+                .map(f -> f.thenAccept(System.out::println))
+                .toArray(size -> new CompletableFuture[size]);
+        CompletableFuture.allOf(futures).join();
+
+        long invocationTime = (System.nanoTime() - start) / 1_000_000;
+        System.out.println("Done in " + invocationTime + "msecs");
+    }
+
+    private static List<String> findPrices(String product) {
 
         List<CompletableFuture<String>> priceFutures = shops.stream().map(
                 shop -> CompletableFuture.supplyAsync(
@@ -83,13 +89,53 @@ public class Shop {
         return priceFutures.stream().map(CompletableFuture::join).collect(Collectors.toList());
     }
 
-    public static List<String> findPrices2(String product) {
+    private static List<String> findPrices2(String product) {
         return shops.stream()
                 .map(shop -> shop.getPrice(product))
                 .map(Quote::parse)
                 .map(Discount::applyDiscount)
                 .collect(Collectors.toList());
     }
+
+    private static List<String> findPrices3(String product) {
+
+        Executor executor = Executors.newFixedThreadPool(Math.min(shops.size(), 100), new ThreadFactory() {
+            @Override
+            public Thread newThread(Runnable r) {
+                Thread t = new Thread(r);
+                t.setDaemon(true);
+                return t;
+            }
+        });
+
+        List<CompletableFuture<String>> priceFutures = shops.stream()
+                .map(shop -> CompletableFuture.supplyAsync(() -> shop.getPrice(product), executor))
+                .map(future -> future.thenApply(Quote::parse))
+                .map(future -> future.thenCompose(quote -> CompletableFuture.supplyAsync(() -> Discount.applyDiscount(quote), executor)))
+                .collect(Collectors.toList());
+
+        return priceFutures.stream()
+                .map(CompletableFuture::join)
+                .collect(Collectors.toList());
+    }
+
+    private static Stream<CompletableFuture<String>> findPricesStream(String product) {
+
+        Executor executor = Executors.newFixedThreadPool(Math.min(shops.size(), 100), new ThreadFactory() {
+            @Override
+            public Thread newThread(Runnable r) {
+                Thread t = new Thread(r);
+                t.setDaemon(true);
+                return t;
+            }
+        });
+
+        return shops.stream()
+                .map(shop -> CompletableFuture.supplyAsync(() -> shop.getPrice(product), executor))
+                .map(future -> future.thenApply(Quote::parse))
+                .map(future -> future.thenCompose(quote -> CompletableFuture.supplyAsync(() -> Discount.applyDiscount(quote), executor)));
+    }
+
 
     public String getPrice(String product) {
         double price = calculatePrice(product);
